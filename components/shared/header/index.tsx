@@ -15,7 +15,7 @@ const Header = () => {
   return (
     <header
       className={cn(
-        'w-full border-b pt-8 pb-8 z-10',
+        'w-full border-b pt-8 pb-8 z-50',
         isProductDetailPage
           ? 'bg-black border-b-white/20 relative' // Black background, normal flow
           : 'border-b-white/20 absolute top-0 left-0 right-0' // Transparent, absolute
