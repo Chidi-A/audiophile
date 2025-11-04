@@ -3,11 +3,20 @@ import { Button } from '../ui/button';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
-const ProductCategories = () => {
+interface ProductCategoriesProps {
+  className?: string;
+  noPaddingTop?: boolean;
+}
+
+const ProductCategories = ({
+  className,
+  noPaddingTop = false,
+}: ProductCategoriesProps) => {
   return (
     <section>
-      <Container className="pt-30 pb-48">
+      <Container className={cn('pb-48', !noPaddingTop && 'pt-30', className)}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
           <div className="relative pt-[116px] pb-[30px] bg-off-white flex flex-col items-center justify-center gap-4 mt-20 rounded-[8px]">
             <div className="absolute top-[-80px] left-0 right-0 flex justify-center">
@@ -21,7 +30,7 @@ const ProductCategories = () => {
             </div>
             <h6>Headphones</h6>
             <Button variant="text-icon" size="icon" className="w-fit" asChild>
-              <Link href="/">
+              <Link href="/headphones">
                 Shop <ChevronRight className="size-4 text-[#D87D4A]" />
               </Link>
             </Button>
@@ -38,7 +47,7 @@ const ProductCategories = () => {
             </div>
             <h6>Speakers</h6>
             <Button variant="text-icon" size="icon" className="w-fit" asChild>
-              <Link href="/">
+              <Link href="/speakers">
                 Shop <ChevronRight className="size-4 text-[#D87D4A]" />
               </Link>
             </Button>
@@ -55,7 +64,7 @@ const ProductCategories = () => {
             </div>
             <h6>Earphones</h6>
             <Button variant="text-icon" size="icon" className="w-fit" asChild>
-              <Link href="/">
+              <Link href="/earphones">
                 Shop <ChevronRight className="size-4 text-[#D87D4A]" />
               </Link>
             </Button>
