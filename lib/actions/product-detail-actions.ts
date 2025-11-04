@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { ImageType } from '@/lib/generated/prisma/enums';
+import { ImageType } from '@prisma/client';
 import {
   ProductDetailPageData,
   ProductDetail,
