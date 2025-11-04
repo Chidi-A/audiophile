@@ -33,7 +33,7 @@ const FeaturedProductCard = () => {
               </p>
             </div>
             <Button variant="black" size="custom" className="w-fit asChild">
-              <Link href="/">See Product</Link>
+              <Link href="/speakers/zx9-speaker">See Product</Link>
             </Button>
           </div>
         </div>

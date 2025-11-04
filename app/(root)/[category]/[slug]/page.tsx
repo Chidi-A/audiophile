@@ -8,6 +8,7 @@ import ProductFeatures from '@/components/product-detail/product-features';
 import ProductGallery from '@/components/product-detail/product-gallery';
 import RelatedProducts from '@/components/product-detail/related-products';
 import { getCachedProductDetailPageData } from '@/lib/utils';
+import BackButton from '@/components/shared/back-button';
 
 type Props = {
   params: Promise<{ category: string; slug: string }>;
@@ -40,12 +41,10 @@ const ProductDetailPage = async ({ params }: Props) => {
       <section>
         <Container className="pt-8 md:pt-16">
           {/* Go Back Link */}
-          <a
-            href={`/${categorySlug}`}
+          <BackButton
+            fallbackUrl={`/${categorySlug}`}
             className="inline-block text-[15px] text-black/50 hover:text-black transition-colors "
-          >
-            Go Back
-          </a>
+          />
         </Container>
       </section>
       {/* Product Main Info */}

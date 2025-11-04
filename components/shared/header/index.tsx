@@ -34,9 +34,9 @@ const Header = () => {
           </Link>
           <div className="flex flex-row gap-8 text-subtitle text-white">
             <Link href="/">Home</Link>
-            <Link href="/">Headphones</Link>
-            <Link href="/">Speakers</Link>
-            <Link href="/">Earphones</Link>
+            <Link href="/headphones">Headphones</Link>
+            <Link href="/speakers">Speakers</Link>
+            <Link href="/earphones">Earphones</Link>
           </div>
           <Link href="/">
             <Image

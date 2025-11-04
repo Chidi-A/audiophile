@@ -29,7 +29,9 @@ const Hero = () => {
               </p>
             </div>
             <Button variant="primary" size="custom" className="w-fit asChild">
-              <Link href="/">See Product</Link>
+              <Link href="/headphones/xx99-mark-two-headphones">
+                See Product
+              </Link>
             </Button>
           </div>
         </div>

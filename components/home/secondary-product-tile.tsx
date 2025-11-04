@@ -21,7 +21,7 @@ const SecondaryProductTile = () => {
             <div className="flex flex-col gap-6 relative z-10">
               <h4>ZX7 Speaker</h4>
               <Button variant="stroke" size="custom" className="w-fit asChild">
-                <Link href="/">See Product</Link>
+                <Link href="/speakers/zx7-speaker">See Product</Link>
               </Button>
             </div>
           </div>
@@ -42,7 +42,7 @@ const SecondaryProductTile = () => {
                   size="custom"
                   className="w-fit asChild"
                 >
-                  <Link href="/">See Product</Link>
+                  <Link href="/earphones/yx1-earphones">See Product</Link>
                 </Button>
               </div>
             </div>
