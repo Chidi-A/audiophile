@@ -1,4 +1,4 @@
-import { Product, ProductImage, Category } from '@/lib/generated/prisma/client';
+import { Product, ProductImage, Category } from '@prisma/client';
 
 // Type for a product with its category preview image
 export type ProductWithCategoryImage = Product & {
