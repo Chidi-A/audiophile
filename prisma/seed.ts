@@ -1,4 +1,4 @@
-import { PrismaClient, ImageType } from '../lib/generated/prisma/client';
+import { PrismaClient, ImageType } from '@prisma/client';
 import data from '../db/data.json';
 
 const prisma = new PrismaClient();

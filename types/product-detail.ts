@@ -1,9 +1,4 @@
-import {
-  Product,
-  ProductImage,
-  BoxContent,
-  Category,
-} from '@/lib/generated/prisma/client';
+import { Product, ProductImage, BoxContent, Category } from '@prisma/client';
 
 // Responsive image URLs
 export type ResponsiveImage = {

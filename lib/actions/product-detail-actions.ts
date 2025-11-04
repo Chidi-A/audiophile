@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { ImageType } from '@prisma/client';
+import { ImageType, ProductImage } from '@prisma/client';
 import {
   ProductDetailPageData,
   ProductDetail,
@@ -12,7 +12,6 @@ import {
 } from '@/types/product-detail';
 import { isValidCategory } from '@/types/category';
 import { notFound } from 'next/navigation';
-import { ProductImage } from '../generated/prisma/client';
 
 /**
  * Fetches a product with all related data for the detail page
