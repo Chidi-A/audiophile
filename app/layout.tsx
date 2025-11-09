@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
 import '@/assets/styles/globals.css';
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from '@/lib/constants';
+import { Toaster } from 'sonner';
+import { SessionProvider } from 'next-auth/react';
+import { auth } from '@/lib/auth';
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -18,14 +21,20 @@ export const metadata: Metadata = {
   metadataBase: new URL(SERVER_URL),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="en">
-      <body className={`${manrope.variable} antialiased`}>{children}</body>
+      <body className={`${manrope.variable} antialiased`}>
+        <SessionProvider session={session}>
+          {children} <Toaster position="top-center" richColors />{' '}
+        </SessionProvider>
+      </body>
     </html>
   );
 }

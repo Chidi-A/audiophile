@@ -31,3 +31,24 @@ export function formatProductName(name: string, categorySlug: string): string {
 
 export const getCachedCategoryPageData = cache(getCategoryPageData);
 export const getCachedProductDetailPageData = cache(getProductDetailPageData);
+
+// General error formatter - returns string message
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function formatError(error: any): string {
+  if (error.name === 'ZodError') {
+    const fieldErrors = error.issues.map(
+      (issue: { message: string }) => issue.message
+    );
+    return fieldErrors.join('. ');
+  } else if (
+    error.name === 'PrismaClientKnownRequestError' &&
+    error.code === 'P2002'
+  ) {
+    const field = error.meta?.target ? error.meta.target[0] : 'Field';
+    return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+  } else {
+    return typeof error.message === 'string'
+      ? error.message
+      : JSON.stringify(error.message);
+  }
+}
