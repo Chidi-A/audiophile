@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
 import { signUpUser } from '@/lib/actions/auth-actions';
 import { useSearchParams } from 'next/navigation';
@@ -17,6 +17,12 @@ const SignUpForm = () => {
 
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
+
+  useEffect(() => {
+    if (data?.success) {
+      window.location.href = callbackUrl;
+    }
+  }, [data?.success, callbackUrl]);
 
   const SignUpButton = () => {
     const { pending } = useFormStatus();

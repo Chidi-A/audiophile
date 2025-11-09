@@ -42,6 +42,7 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
     await signIn('credentials', {
       email: user.email,
       password: plainPassword,
+      redirect: false,
     });
 
     return { success: true, message: 'Signed up successfully' };
@@ -61,8 +62,10 @@ export async function signInUser(prevState: unknown, formData: FormData) {
       password: formData.get('password'),
     });
 
-    await signIn('credentials', user);
-
+    await signIn('credentials', {
+      ...user,
+      redirect: false,
+    });
     return { success: true, message: 'Signed in successfully' };
   } catch (error) {
     if (isRedirectError(error)) {

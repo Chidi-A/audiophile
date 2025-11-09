@@ -8,6 +8,7 @@ import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { signInUser } from '@/lib/actions/auth-actions';
 import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 const SignInForm = () => {
   const [data, action] = useActionState(signInUser, {
@@ -17,6 +18,12 @@ const SignInForm = () => {
 
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
+
+  useEffect(() => {
+    if (data?.success) {
+      window.location.href = callbackUrl;
+    }
+  }, [data?.success, callbackUrl]);
 
   const SignInButton = () => {
     const { pending } = useFormStatus();
