@@ -52,3 +52,40 @@ export function formatError(error: any): string {
       : JSON.stringify(error.message);
   }
 }
+
+/**
+ * Convert a value to a plain object
+ * @param value - The value to convert
+ * @returns The plain object
+ */
+export function convertToPlainObject<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value));
+}
+
+// Shipping and tax constants
+const SHIPPING_PRICE = 50; // $50 flat rate shipping
+const TAX_RATE = 0.2; // 20% VAT
+
+/**
+ * Convert price from cents to decimal for Prisma
+ */
+export function convertCentsToDecimal(cents: number): number {
+  return cents / 100;
+}
+
+/**
+ * Calculate shipping and tax for cart
+ */
+export function calculateOrderPrices(itemsPrice: number) {
+  const itemsPriceInDollars = convertCentsToDecimal(itemsPrice);
+  const shippingPrice = SHIPPING_PRICE;
+  const taxPrice = itemsPriceInDollars * TAX_RATE;
+  const totalPrice = itemsPriceInDollars + shippingPrice + taxPrice;
+
+  return {
+    itemsPrice: itemsPriceInDollars,
+    shippingPrice,
+    taxPrice,
+    totalPrice,
+  };
+}

@@ -5,6 +5,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { NextAuthConfig } from 'next-auth';
+import { cookies } from 'next/headers';
 
 export const config = {
   adapter: PrismaAdapter(prisma),
@@ -71,6 +72,24 @@ export const config = {
       if (trigger === 'update' && session) {
         token.name = session.user.name;
         token.email = session.user.email;
+      }
+      if (trigger === 'signIn' || trigger === 'signUp') {
+        const cookiesObject = await cookies();
+        const sessionCartId = cookiesObject.get('sessionCartId')?.value;
+        if (sessionCartId) {
+          const sessionCart = await prisma.cart.findFirst({
+            where: { sessionCartId },
+          });
+          if (sessionCart) {
+            await prisma.cart.deleteMany({
+              where: { userId: user.id },
+            });
+            await prisma.cart.update({
+              where: { id: sessionCart.id },
+              data: { userId: user.id },
+            });
+          }
+        }
       }
 
       return token;

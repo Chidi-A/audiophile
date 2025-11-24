@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { APP_NAME } from '@/lib/constants';
 import UserButton from './user-button';
 import HeaderWrapper from './header-wrapper';
+import CartButton from './cart-button';
 
 const Header = () => {
   return (
@@ -25,15 +26,7 @@ const Header = () => {
             <Link href="/earphones">Earphones</Link>
           </div>
           <div className="flex flex-row items-center gap-6">
-            <Link href="/">
-              <Image
-                src="/images/icon-cart.svg"
-                alt={`${APP_NAME} cart icon`}
-                width={23}
-                height={20}
-                priority={true}
-              />
-            </Link>
+            <CartButton />
             <UserButton />
           </div>
         </div>

@@ -16,7 +16,7 @@ const Hero = () => {
         />
       </div>
       <Container>
-        <div className="flex items-center justify-start h-svh max-h-207">
+        <div className="flex items-center justify-start h-svh max-h-240">
           <div className="max-w-160 flex flex-col gap-10">
             <div className="flex flex-col gap-6 ">
               <div className="text-overline text-white opacity-50 tracking-[10px]">

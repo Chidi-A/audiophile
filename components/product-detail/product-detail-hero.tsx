@@ -1,12 +1,13 @@
 'use client';
 
-'use client';
-
 import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/utils';
 import type { ProductDetail } from '@/types/product-detail';
+import { addItemToCart } from '@/lib/actions/cart-actions';
+import { toast } from 'sonner';
+import type { CartItem } from '@/types';
 
 type Props = {
   product: ProductDetail;
@@ -14,6 +15,7 @@ type Props = {
 
 const ProductDetailHero = ({ product }: Props) => {
   const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
 
   const handleDecrement = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
@@ -23,9 +25,31 @@ const ProductDetailHero = ({ product }: Props) => {
     setQuantity((prev) => Math.min(99, prev + 1));
   };
 
-  const handleAddToCart = () => {
-    // TODO: Implement cart functionality
-    console.log('Add to cart:', { productId: product.id, quantity });
+  const handleAddToCart = async () => {
+    if (!product.productImage) return;
+
+    setIsAdding(true);
+
+    // Build CartItem with the selected quantity
+    const cartItem: CartItem = {
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      price: product.price,
+      quantity: quantity, // ✅ Use the selected quantity from state
+      image: product.productImage.mobile,
+    };
+
+    const result = await addItemToCart(cartItem);
+
+    if (result.success) {
+      toast.success(result.message);
+      setQuantity(1); // Reset quantity selector to 1
+    } else {
+      toast.error(result.message);
+    }
+
+    setIsAdding(false);
   };
 
   if (!product.productImage) {
@@ -106,9 +130,10 @@ const ProductDetailHero = ({ product }: Props) => {
             variant="primary"
             size="custom"
             onClick={handleAddToCart}
+            disabled={isAdding}
             className="h-12"
           >
-            Add to Cart
+            {isAdding ? 'Adding...' : 'Add to Cart'}
           </Button>
         </div>
       </div>
