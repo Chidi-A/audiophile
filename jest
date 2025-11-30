@@ -1,0 +1,32 @@
+
+  console.log
+    A21AAIJDbrwo77tOQm72z_qzGyVfmLA-MK74bctqNv8YPLW7tUpCpYkLREICZ4mMDXcBvy4Pz2pV43WSaJF7gikcz6yR
+    A21AAIJDbrwo77tOQm72z_qzGyVfmLA-MK74bctqNv8YPLW7tUpCpYkLREICZ4mMDXcBvy4Pz2pV43WSaJF7gikcz6yRDZGig
+
+      at Object.<anonymous> (tests/paypal.test.ts:5:11)
+
+ FAIL  tests/paypal.test.ts
+  ✓ generates a PayPal access token (991 ms)
+  ✕ creates a PayPal order (1808 ms)
+
+  ● creates a PayPal order
+
+    {"name":"SERVICE_UNAVAILABLE","debug_id":"f2232983269dd","message":"service unavailable","li
+    {"name":"SERVICE_UNAVAILABLE","debug_id":"f2232983269dd","message":"service unavailable","links":[]}
+
+      67 |   }
+      68 |   const errorMessage = await response.text();
+    > 69 |   throw new Error(errorMessage);
+         |         ^
+      70 | }
+      71 |
+      72 | export { generateAccessToken };
+
+      at handleResponse (lib/paypal.ts:69:9)
+      at async Object.<anonymous> (tests/paypal.test.ts:16:25)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 passed, 2 total
+Snapshots:   0 total
+Time:        2.948 s, estimated 3 s
+Ran all test suites.npm run test

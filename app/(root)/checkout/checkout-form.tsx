@@ -1,6 +1,10 @@
 'use client';
 
-import type { Cart, CheckoutForm as CheckoutFormType } from '@/types';
+import type {
+  Cart,
+  CheckoutForm as CheckoutFormType,
+  SerializedOrder,
+} from '@/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { checkoutFormSchema } from '@/lib/validations/order-schema';
@@ -19,16 +23,34 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
 import { formatPrice, calculateOrderPrices } from '@/lib/utils';
+import {
+  PayPalButtons,
+  PayPalScriptProvider,
+  usePayPalScriptReducer,
+} from '@paypal/react-paypal-js';
+import {
+  approvePayPalOrder,
+  createPayPalOrder,
+  getOrderById,
+} from '@/lib/actions/order-actions';
+import { createStripePaymentIntent } from '@/lib/stripe';
+import StripePayment from './stripe-payment';
 
 interface CheckoutFormProps {
   cart: Cart;
   userId: string;
+  paypalClientId: string;
 }
 
-const CheckoutForm = ({ cart }: CheckoutFormProps) => {
+const CheckoutForm = ({ cart, paypalClientId }: CheckoutFormProps) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [orderData, setOrderData] = useState<SerializedOrder | null>(null);
+  const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(
+    null
+  );
 
   // Calculate prices
   const prices = calculateOrderPrices(Number(cart.itemsPrice));
@@ -62,6 +84,46 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
       const result = await createOrder(data);
 
       if (result.success) {
+        // If Stripe payment, create PaymentIntent
+        if (data.paymentMethod === 'Stripe' && result.data) {
+          setOrderId(result.data);
+
+          // Fetch the order to get the total price
+          const orderResult = await getOrderById(result.data);
+          if (orderResult.success && orderResult.data) {
+            setOrderData(orderResult.data as SerializedOrder);
+
+            // NOW create the Stripe PaymentIntent with the orderId and amount
+            const paymentIntentResult = await createStripePaymentIntent(
+              result.data,
+              Number(orderResult.data.totalPrice)
+            );
+
+            if (
+              paymentIntentResult.success &&
+              paymentIntentResult.clientSecret
+            ) {
+              setStripeClientSecret(paymentIntentResult.clientSecret);
+            }
+          }
+
+          setIsSubmitting(false);
+          return; // Don't redirect yet - show Stripe payment form
+        }
+        // If PayPal payment, store orderId and fetch order data
+        if (data.paymentMethod === 'PayPal' && result.data) {
+          setOrderId(result.data);
+
+          // Fetch the order to get isPaid and paymentMethod from database
+          const orderResult = await getOrderById(result.data);
+          if (orderResult.success && orderResult.data) {
+            setOrderData(orderResult.data as SerializedOrder);
+          }
+
+          setIsSubmitting(false);
+          return; // Don't redirect yet
+        }
+
         // Redirect to order confirmation page
         if (result.redirectTo) {
           router.push(result.redirectTo);
@@ -74,6 +136,43 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Checks the loading status of the PayPal script
+  function PrintLoadingState() {
+    const [{ isPending, isRejected }] = usePayPalScriptReducer();
+    let status = '';
+    if (isPending) {
+      status = 'Loading PayPal...';
+    } else if (isRejected) {
+      status = 'Error in loading PayPal.';
+    }
+    return status ? (
+      <div className="text-sm text-gray-600 mb-4">{status}</div>
+    ) : null;
+  }
+
+  // Creates a PayPal order
+  const handleCreatePayPalOrder = async () => {
+    if (!orderId) return;
+    const res = await createPayPalOrder(orderId);
+    if (!res.success) {
+      setError(res.message);
+      return;
+    }
+    return res.data;
+  };
+
+  // Approves a PayPal order
+  const handleApprovePayPalOrder = async (data: { orderID: string }) => {
+    if (!orderId) return;
+    const res = await approvePayPalOrder(orderId, data);
+    if (res.success) {
+      // Redirect to order confirmation
+      router.push(`/order/${orderId}`);
+    } else {
+      setError(res.message);
     }
   };
 
@@ -280,6 +379,40 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
 
                         <label
                           className={`flex items-center gap-4 border rounded-lg px-4 py-3 cursor-pointer transition-all ${
+                            field.value === 'PayPal'
+                              ? 'border-[#D87D4A] bg-[#D87D4A]/5'
+                              : 'border-gray-300 hover:border-[#D87D4A]'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            value="PayPal"
+                            checked={field.value === 'PayPal'}
+                            onChange={field.onChange}
+                            className="w-5 h-5 accent-[#D87D4A]"
+                          />
+                          <span className="text-sm font-bold">PayPal</span>
+                        </label>
+
+                        <label
+                          className={`flex items-center gap-4 border rounded-lg px-4 py-3 cursor-pointer transition-all ${
+                            field.value === 'Stripe'
+                              ? 'border-[#D87D4A] bg-[#D87D4A]/5'
+                              : 'border-gray-300 hover:border-[#D87D4A]'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            value="Stripe"
+                            checked={field.value === 'Stripe'}
+                            onChange={field.onChange}
+                            className="w-5 h-5 accent-[#D87D4A]"
+                          />
+                          <span className="text-sm font-bold">Stripe</span>
+                        </label>
+
+                        <label
+                          className={`flex items-center gap-4 border rounded-lg px-4 py-3 cursor-pointer transition-all ${
                             field.value === 'Cash on Delivery'
                               ? 'border-[#D87D4A] bg-[#D87D4A]/5'
                               : 'border-gray-300 hover:border-[#D87D4A]'
@@ -455,17 +588,47 @@ const CheckoutForm = ({ cart }: CheckoutFormProps) => {
           </span>
         </div>
 
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          form="checkout-form"
-          variant="primary"
-          size="custom"
-          className="w-full"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Processing...' : 'Continue & Pay'}
-        </Button>
+        {/* Submit Button or PayPal Button */}
+        {!orderId ? (
+          <Button
+            type="submit"
+            form="checkout-form"
+            variant="primary"
+            size="custom"
+            className="w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Processing...' : 'Continue & Pay'}
+          </Button>
+        ) : (
+          orderData &&
+          !orderData.isPaid &&
+          orderData.paymentMethod === 'PayPal' && (
+            <div>
+              <PayPalScriptProvider options={{ clientId: paypalClientId }}>
+                <PrintLoadingState />
+                <PayPalButtons
+                  createOrder={handleCreatePayPalOrder}
+                  onApprove={handleApprovePayPalOrder}
+                />
+              </PayPalScriptProvider>
+            </div>
+          )
+        )}
+
+        {/* Stripe Payment */}
+        {orderData &&
+          !orderData.isPaid &&
+          orderData.paymentMethod === 'Stripe' &&
+          stripeClientSecret && (
+            <div>
+              <StripePayment
+                priceInCents={Math.round(Number(orderData.totalPrice) * 100)}
+                orderId={orderData.id}
+                clientSecret={stripeClientSecret}
+              />
+            </div>
+          )}
       </div>
     </div>
   );

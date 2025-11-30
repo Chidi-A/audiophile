@@ -35,7 +35,11 @@ export default async function CheckoutPage() {
           Go Back
         </Link>
 
-        <CheckoutForm cart={cart} userId={session.user.id as string} />
+        <CheckoutForm
+          cart={cart}
+          userId={session.user.id as string}
+          paypalClientId={process.env.PAYPAL_CLIENT_ID as string}
+        />
       </div>
     </div>
   );

@@ -12,15 +12,13 @@ export const shippingAddressSchema = z.object({
 });
 
 // Payment result schema - for storing payment gateway responses
-export const paymentResultSchema = z
-  .object({
-    id: z.string().optional(),
-    status: z.string().optional(),
-    email_address: z.string().email().optional(),
-    pricePaid: z.string().optional(),
-    timestamp: z.string().optional(),
-  })
-  .passthrough();
+export const paymentResultSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  email_address: z.string(),
+  pricePaid: z.string(),
+});
+
 // Insert order schema
 export const insertOrderSchema = z.object({
   userId: z.string().cuid('Invalid user ID'),
@@ -80,7 +78,7 @@ export const updateOrderStatusSchema = z.object({
 export const checkoutFormSchema = z
   .object({
     shippingAddress: shippingAddressSchema,
-    paymentMethod: z.enum(['e-Money', 'Cash on Delivery']),
+    paymentMethod: z.enum(['e-Money', 'Cash on Delivery', 'PayPal', 'Stripe']),
     // Optional: save address for future use
     saveAddress: z.boolean().default(false),
     // e-Money fields

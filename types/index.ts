@@ -40,3 +40,31 @@ export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type UpdateOrderStatus = z.infer<typeof updateOrderStatusSchema>;
 export type CheckoutForm = z.infer<typeof checkoutFormSchema>;
 export type PaymentResult = z.infer<typeof paymentResultSchema>;
+
+export type SerializedOrder = {
+  id: string;
+  userId: string;
+  shippingAddress: ShippingAddress;
+  paymentMethod: string;
+  paymentResult: PaymentResult;
+  itemsPrice: number;
+  shippingPrice: number;
+  taxPrice: number;
+  totalPrice: number;
+  isPaid: boolean;
+  paidAt: Date | null;
+  isDelivered: boolean;
+  deliveredAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  orderItems: Array<{
+    id: string;
+    name: string;
+    orderId: string;
+    productId: number;
+    qty: number;
+    slug: string;
+    image: string;
+    price: number;
+  }>;
+};
