@@ -18,7 +18,7 @@ const ProductGallery = ({ images }: Props) => {
       {/* Left Column - Two smaller images stacked */}
       <div className="flex flex-col gap-4 md:gap-5 lg:gap-8">
         {gallery1 && (
-          <div className="relative w-full aspect-327/174 md:aspect-277/174 lg:aspect-445/280 bg-[#F1F1F1] rounded-lg overflow-hidden">
+          <div className="relative w-full aspect-[327/174] md:aspect-[277/174] lg:aspect-[445/280] bg-[#F1F1F1] rounded-lg overflow-hidden">
             <picture>
               <source
                 media="(min-width: 1024px)"
@@ -33,14 +33,14 @@ const ProductGallery = ({ images }: Props) => {
                 alt="Product gallery image 1"
                 fill
                 className="object-cover"
-                sizes="(min-width: 1024px) 445px, (min-width: 768px) 277px, 100vw"
+                sizes="(min-width: 1024px) 445px, (min-width: 768px) 277px, 327px"
               />
             </picture>
           </div>
         )}
 
         {gallery2 && (
-          <div className="relative w-full aspect-327/174 md:aspect-277/174 lg:aspect-445/280 bg-[#F1F1F1] rounded-lg overflow-hidden">
+          <div className="relative w-full aspect-[327/174] md:aspect-[277/174] lg:aspect-[445/280] bg-[#F1F1F1] rounded-lg overflow-hidden">
             <picture>
               <source
                 media="(min-width: 1024px)"
@@ -55,7 +55,7 @@ const ProductGallery = ({ images }: Props) => {
                 alt="Product gallery image 2"
                 fill
                 className="object-cover"
-                sizes="(min-width: 1024px) 445px, (min-width: 768px) 277px, 100vw"
+                sizes="(min-width: 1024px) 445px, (min-width: 768px) 277px, 327px"
               />
             </picture>
           </div>
@@ -64,7 +64,7 @@ const ProductGallery = ({ images }: Props) => {
 
       {/* Right Column - One large image */}
       {gallery3 && (
-        <div className="relative w-full h-full rounded-lg overflow-hidden">
+        <div className="relative w-full aspect-[327/368] md:aspect-[395/592] lg:aspect-[635/592] bg-[#F1F1F1] rounded-lg overflow-hidden">
           <picture>
             <source
               media="(min-width: 1024px)"
@@ -76,7 +76,7 @@ const ProductGallery = ({ images }: Props) => {
               alt="Product gallery image 3"
               fill
               className="object-cover"
-              sizes="(min-width: 1024px) 635px, (min-width: 768px) 395px, 100vw"
+              sizes="(min-width: 1024px) 635px, (min-width: 768px) 395px, 327px"
             />
           </picture>
         </div>
