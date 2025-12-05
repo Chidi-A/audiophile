@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   },
   description: APP_DESCRIPTION,
   metadataBase: new URL(SERVER_URL),
+  icons: {
+    icon: '/assets/favicon-32x32.png',
+  },
 };
 
 export default async function RootLayout({

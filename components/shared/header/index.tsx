@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu } from 'lucide-react';
@@ -8,13 +9,10 @@ import UserButton from './user-button';
 import HeaderWrapper from './header-wrapper';
 import CartButton from './cart-button';
 import ProductCategories from '../product-categories';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/headphones', label: 'Headphones' },
@@ -27,7 +25,7 @@ const Header = () => {
       <div className="max-w-[1110px] mx-auto px-6 md:px-10 lg:px-0">
         <div className="flex flex-row justify-between items-center">
           {/* Mobile & Tablet Menu Button */}
-          <Sheet>
+          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild className="lg:hidden">
               <button
                 aria-label="Open menu"
@@ -40,12 +38,14 @@ const Header = () => {
               side="top"
               className="bg-white w-full h-auto max-h-[90vh] overflow-y-auto pt-20"
             >
-              <ProductCategories noPaddingTop={true} className="pt-0 pb-8" />
+              <div onClick={() => setIsMenuOpen(false)}>
+                <ProductCategories noPaddingTop={true} className="pt-0 pb-8" />
+              </div>
             </SheetContent>
           </Sheet>
 
           {/* Logo */}
-          <Link href="/" className="lg:order-none order-1">
+          <Link href="/" className="lg:order-0 order-1">
             <Image
               src="/images/logo.svg"
               alt={`${APP_NAME} logo`}
@@ -69,7 +69,7 @@ const Header = () => {
           </nav>
 
           {/* Right side buttons */}
-          <div className="flex flex-row items-center gap-6 lg:order-none order-2">
+          <div className="flex flex-row items-center gap-6 lg:order-0 order-2">
             <CartButton />
             <UserButton />
           </div>
