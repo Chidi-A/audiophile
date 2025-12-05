@@ -25,7 +25,7 @@ const RelatedProducts = ({ products }: Props) => {
           >
             {/* Product Image */}
             {product.previewImage && (
-              <div className="relative w-full aspect-square bg-[#F1F1F1] rounded-lg overflow-hidden mb-8 md:mb-10">
+              <div className="relative w-full  aspect-2/1 md:aspect-square bg-[#F1F1F1] rounded-lg overflow-hidden mb-8 md:mb-10">
                 <picture>
                   <source
                     media="(min-width: 1024px)"
@@ -39,8 +39,8 @@ const RelatedProducts = ({ products }: Props) => {
                     src={product.previewImage.mobile}
                     alt={product.name}
                     fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 350px, (min-width: 768px) 223px, 100vw"
+                    className="object-contain md:object-cover "
+                    sizes="(min-width: 1024px) 350px, (min-width: 768px) 223px, 180px"
                   />
                 </picture>
               </div>

@@ -9,7 +9,11 @@ export const metadata: Metadata = {
   title: 'Checkout',
 };
 
-export default async function CheckoutPage() {
+export default async function CheckoutPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ payment_intent?: string; redirect_status?: string }>;
+}) {
   const session = await auth();
 
   // Redirect to sign in if not authenticated
@@ -17,11 +21,16 @@ export default async function CheckoutPage() {
     redirect('/sign-in?callbackUrl=/checkout');
   }
 
+  // Await searchParams
+  const params = await searchParams;
+  const isReturningFromStripe =
+    params.payment_intent && params.redirect_status === 'succeeded';
+
   // Get cart data
   const cart = await getMyCart();
 
   // Redirect to home if cart is empty
-  if (!cart || cart.items.length === 0) {
+  if (!cart || (cart.items.length === 0 && !isReturningFromStripe)) {
     redirect('/');
   }
 

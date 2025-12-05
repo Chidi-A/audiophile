@@ -34,7 +34,7 @@ const CategoryPage = async ({ params }: Props) => {
     <>
       {/* Category Header */}
       <section className="bg-black">
-        <Container className="py-24 md:pt-48 pb-24">
+        <Container className="lg:py-24 lg:pt-40 pt-34 md:pt-48 pb-8">
           <h1 className="text-white text-[28px] md:text-[40px] font-bold uppercase text-center tracking-[1.5px] md:tracking-[2px]">
             {category.name}
           </h1>

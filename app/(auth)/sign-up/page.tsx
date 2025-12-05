@@ -8,6 +8,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import SignUpForm from './sign-up-form';
 import GoogleSignInForm from '../sign-in/google-sign-in-form';
+import { Suspense } from 'react';
 
 export default function SignUpPage() {
   return (
@@ -30,7 +31,9 @@ export default function SignUpPage() {
               </span>
             </div>
           </div>
-          <SignUpForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <SignUpForm />
+          </Suspense>
         </CardContent>
       </Card>
     </div>

@@ -103,7 +103,7 @@ const CartModal = ({ isOpen, onClose }: CartModalProps) => {
         <Dialog.Overlay className="fixed inset-0 bg-black/40 z-40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
 
         {/* Cart Content */}
-        <Dialog.Content className="fixed top-[100px] right-4 md:right-8 lg:right-[165px] z-50 w-[calc(100vw-2rem)] max-w-[377px] bg-white rounded-lg p-8 shadow-xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus:outline-none">
+        <Dialog.Content className="fixed top-[100px] left-[5%] right-[5%] md:left-auto md:right-8 lg:right-[165px] z-50 w-auto md:max-w-[377px] bg-white rounded-lg p-6 md:p-8 shadow-xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus:outline-none">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <Dialog.Title className="text-lg font-bold tracking-[1.29px] uppercase">

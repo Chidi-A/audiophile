@@ -90,5 +90,11 @@ export default async function StripePaymentSuccessPage({
   const serializedOrder = orderResult.data as SerializedOrder;
 
   // JSX return is outside any try/catch block
-  return <PaymentSuccessModal open={true} order={serializedOrder} />;
+  return (
+    <PaymentSuccessModal
+      open={true}
+      order={serializedOrder}
+      onClose={() => {}}
+    />
+  );
 }

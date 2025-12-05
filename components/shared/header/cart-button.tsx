@@ -18,11 +18,18 @@ export default function CartButton() {
 
     loadCount();
 
+    // Listen for custom cart update events
+    const handleCartUpdate = () => {
+      loadCount();
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate);
+
     // Also reload when cart modal closes (to update badge)
     if (!isCartOpen) {
       loadCount();
     }
-  }, [isCartOpen]);
+  });
 
   return (
     <>

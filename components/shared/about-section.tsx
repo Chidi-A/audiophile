@@ -3,11 +3,11 @@ import Image from 'next/image';
 
 const AboutSection = () => {
   return (
-    <section className="pb-50">
+    <section className="pb-30 lg:pb-50">
       <Container>
         <div>
-          <div className="grid grid-cols-2  items-center">
-            <div className="flex flex-col gap-8 max-w-[445px]">
+          <div className="grid lg:grid-cols-2 grid-cols-1 gap-10 lg:gap-0 items-center">
+            <div className="flex flex-col gap-8 max-w-[445px] text-center lg:text-left">
               <h2>
                 Bringing you the{' '}
                 <span className="text-primary-orange">best</span> audio gear
@@ -22,12 +22,30 @@ const AboutSection = () => {
                 audio equipment.
               </p>
             </div>
-            <div className="relative rounded-[8px] overflow-hidden">
+            <div className="relative rounded-[8px] overflow-hidden order-first lg:order-last  lg:h-auto">
+              {/* Mobile Image */}
+              <Image
+                src="/assets/shared/mobile/image-best-gear.jpg"
+                alt="About Hero"
+                width={1000}
+                height={1000}
+                className="w-full h-auto md:hidden"
+              />
+              {/* Tablet Image */}
+              <Image
+                src="/assets/shared/tablet/image-best-gear.jpg"
+                alt="About Hero"
+                width={1000}
+                height={1000}
+                className="w-full h-auto hidden md:block lg:hidden"
+              />
+              {/* Desktop Image */}
               <Image
                 src="/images/image-best-gear.jpg"
                 alt="About Hero"
                 width={1000}
                 height={1000}
+                className="hidden lg:block"
               />
             </div>
           </div>

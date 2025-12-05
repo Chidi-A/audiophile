@@ -88,21 +88,20 @@ export async function createOrder(data: {
         });
       }
 
-      // 3. Clear the cart (only for non-PayPal payments)
-      // For PayPal, cart will be cleared after successful payment
-      if (
-        order.paymentMethod !== 'PayPal' &&
-        order.paymentMethod !== 'Stripe'
-      ) {
-        await tx.cart.update({
-          where: { id: cart.id },
-          data: {
-            items: [],
-            itemsPrice: 0,
-            totalPrice: 0,
-          },
-        });
-      }
+      // // 3. Clear the cart for e-Money and Cash on Delivery
+      // if (
+      //   validatedData.paymentMethod === 'e-Money' ||
+      //   validatedData.paymentMethod === 'Cash on Delivery'
+      // ) {
+      //   await tx.cart.update({
+      //     where: { id: cart.id },
+      //     data: {
+      //       items: [],
+      //       itemsPrice: 0,
+      //       totalPrice: 0,
+      //     },
+      //   });
+      // }
 
       // 4. Optionally save address and payment method to user profile
       if (validatedData.saveAddress) {
@@ -266,25 +265,7 @@ export async function approvePayPalOrder(
       },
     });
 
-    // Clear the cart after successful PayPal payment
-    const cart = await prisma.cart.findFirst({
-      where: { userId: order.userId },
-    });
-
-    if (cart) {
-      await prisma.cart.update({
-        where: { id: cart.id },
-        data: {
-          items: [],
-          itemsPrice: 0,
-          totalPrice: 0,
-        },
-      });
-    }
-
     revalidatePath(`/order/${orderId}`);
-    revalidatePath('/cart');
-    revalidatePath('/checkout');
 
     return {
       success: true,

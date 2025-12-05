@@ -5,17 +5,34 @@ import Link from 'next/link';
 
 const SecondaryProductTile = () => {
   return (
-    <section className="pt-12 pb-50">
+    <section className="lg:pt-12 pt-6 pb-30 lg:pb-50">
       <Container>
-        <div className="grid grid-cols-1 grid-rows-2 gap-12">
-          <div className="relative py-[101px] pl-[95px] rounded-[8px] overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-rows-2 lg:gap-12 gap-6">
+          <div className="relative py-[101px] lg:pl-[95px] pl-6 rounded-[8px] overflow-hidden">
             <div className="absolute top-0 left-0 right-0 bottom-0">
+              {/* Mobile Image */}
+              <Image
+                src="/assets/home/mobile/image-speaker-zx7.jpg"
+                alt="Speaker ZX7"
+                width={1000}
+                height={1000}
+                className="w-full h-full object-cover md:hidden"
+              />
+              {/* Tablet Image */}
+              <Image
+                src="/assets/home/tablet/image-speaker-zx7.jpg"
+                alt="Speaker ZX7"
+                width={1000}
+                height={1000}
+                className="w-full h-full object-cover hidden md:block lg:hidden"
+              />
+              {/* Desktop Image */}
               <Image
                 src="/images/image-speaker-zx7.jpg"
                 alt="Speaker ZX7"
                 width={1000}
                 height={1000}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover hidden lg:block"
               />
             </div>
             <div className="flex flex-col gap-6 relative z-10">
@@ -25,7 +42,7 @@ const SecondaryProductTile = () => {
               </Button>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-[30px] ">
+          <div className="grid lg:grid-cols-2 grid-cols-1 lg:gap-[30px] gap-6 ">
             <div className="relative rounded-[8px] overflow-hidden">
               <Image
                 src="/images/image-earphones-yx1.jpg"
@@ -34,7 +51,7 @@ const SecondaryProductTile = () => {
                 height={1000}
               />
             </div>
-            <div className="px-[95px] py-[101px] bg-off-white rounded-[8px]">
+            <div className="lg:px-[95px] lg:py-[101px] px-6 py-14 bg-off-white rounded-[8px]">
               <div className="flex flex-col gap-6 relative z-10">
                 <h4>YX1 Earphones</h4>
                 <Button

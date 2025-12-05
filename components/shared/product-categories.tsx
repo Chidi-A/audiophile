@@ -16,9 +16,15 @@ const ProductCategories = ({
 }: ProductCategoriesProps) => {
   return (
     <section>
-      <Container className={cn('pb-48', !noPaddingTop && 'pt-30', className)}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
-          <div className="relative pt-[116px] pb-[30px] bg-off-white flex flex-col items-center justify-center gap-4 mt-20 rounded-[8px]">
+      <Container
+        className={cn(
+          'pb-30 lg:pb-48',
+          !noPaddingTop && 'pt-10 lg:pt-30',
+          className
+        )}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-[30px] gap-4">
+          <div className="relative pt-[116px] pb-5 lg:pb-[30px] bg-off-white flex flex-col items-center justify-center gap-4 mt-20 rounded-[8px]">
             <div className="absolute top-[-80px] left-0 right-0 flex justify-center">
               <Image
                 src="/images/image-category-thumbnail-headphone.png"

@@ -16,10 +16,12 @@ const StripePayment = ({
   priceInCents,
   orderId,
   clientSecret,
+  onSuccess,
 }: {
   priceInCents: number;
   orderId: string;
   clientSecret: string;
+  onSuccess: (paymentIntentId: string) => void;
 }) => {
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -38,24 +40,45 @@ const StripePayment = ({
       e.preventDefault();
       if (stripe == null || elements == null || email == null) return;
       setIsLoading(true);
-      stripe
-        .confirmPayment({
-          elements,
-          confirmParams: {
-            return_url: `${SERVER_URL}/checkout/stripe-payment-success`,
-          },
-        })
-        .then(({ error }) => {
-          if (
-            error?.type === 'card_error' ||
-            error?.type === 'validation_error'
-          ) {
-            setErrorMessage(error?.message ?? 'An unknown error occurred.');
-          } else if (error) {
-            setErrorMessage('An unknown error occurred.');
-          }
-        })
-        .finally(() => setIsLoading(false));
+      //   stripe
+      //     .confirmPayment({
+      //       elements,
+      //       confirmParams: {
+      //         return_url: `${SERVER_URL}/checkout`,
+      //       },
+      //     })
+      //     .then(({ error }) => {
+      //       if (
+      //         error?.type === 'card_error' ||
+      //         error?.type === 'validation_error'
+      //       ) {
+      //         setErrorMessage(error?.message ?? 'An unknown error occurred.');
+      //       } else if (error) {
+      //         setErrorMessage('An unknown error occurred.');
+      //       }
+      //     })
+      //     .finally(() => setIsLoading(false));
+      // }
+
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          receipt_email: email,
+        },
+        redirect: 'if_required', // Only redirect if required by payment method
+      });
+
+      if (error) {
+        if (error.type === 'card_error' || error.type === 'validation_error') {
+          setErrorMessage(error.message ?? 'An unknown error occurred.');
+        } else {
+          setErrorMessage('An unknown error occurred.');
+        }
+        setIsLoading(false);
+      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Payment successful! Call the success handler
+        onSuccess(paymentIntent.id);
+      }
     }
 
     return (
@@ -75,7 +98,7 @@ const StripePayment = ({
         >
           {isLoading
             ? 'Purchasing...'
-            : `Purchase - ${formatPrice(priceInCents / 100)}`}
+            : `Purchase - ${formatPrice(priceInCents)}`}
         </Button>
       </form>
     );

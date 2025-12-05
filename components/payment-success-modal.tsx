@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
   Dialog,
@@ -11,25 +10,35 @@ import {
 import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/utils';
 import { SerializedOrder } from '@/types';
+import { useRouter } from 'next/navigation';
 
 interface PaymentSuccessModalProps {
   open: boolean;
   order: SerializedOrder;
+  onClose: () => void;
 }
 
-export function PaymentSuccessModal({ open, order }: PaymentSuccessModalProps) {
-  const router = useRouter();
-
+export function PaymentSuccessModal({
+  open,
+  order,
+  onClose,
+}: PaymentSuccessModalProps) {
   // Get first item and count remaining
+  const router = useRouter();
   const firstItem = order.orderItems[0];
   const remainingItems = order.orderItems.length - 1;
 
-  const handleBackToHome = () => {
-    router.push('/');
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      router.replace('/');
+    }
   };
+
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="max-w-[540px] p-8 md:p-12">
+      <DialogContent className="w-[90%] max-w-[540px] p-6 md:p-8 lg:p-12">
         {/* Success Icon */}
         <div className="flex  mb-6">
           <Image
@@ -104,7 +113,7 @@ export function PaymentSuccessModal({ open, order }: PaymentSuccessModalProps) {
 
         {/* Back to Home Button */}
         <Button
-          onClick={handleBackToHome}
+          onClick={handleClose}
           variant="primary"
           size="custom"
           className="w-full"

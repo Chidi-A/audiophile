@@ -2,26 +2,30 @@
 
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { getOrderById, updateOrderToPaid } from './order-actions';
-import { SerializedOrder } from '@/types';
-import { revalidatePath } from 'next/cache';
+import { updateOrderToPaid, getOrderById } from './order-actions';
+import { PaymentResult } from '@/types';
 
-export async function completeStripePayment(
-  orderId: string,
-  paymentIntentId: string
-): Promise<{ success: boolean; order?: SerializedOrder; message?: string }> {
+export async function completeStripePayment(paymentIntentId: string) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return { success: false, message: 'Unauthorized' };
     }
 
-    // Get the order
-    const order = await prisma.order.findFirst({
+    // Find order by payment intent
+    const orders = await prisma.order.findMany({
       where: {
-        id: orderId,
         userId: session.user.id,
+        paymentMethod: 'Stripe',
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const order = orders.find((order) => {
+      const paymentResult = order.paymentResult as PaymentResult | null;
+      return paymentResult?.id === paymentIntentId;
     });
 
     if (!order) {
@@ -39,39 +43,20 @@ export async function completeStripePayment(
           pricePaid: order.totalPrice.toString(),
         },
       });
-
-      // Clear the cart
-      const cart = await prisma.cart.findFirst({
-        where: { userId: session.user.id },
-      });
-
-      if (cart) {
-        await prisma.cart.update({
-          where: { id: cart.id },
-          data: {
-            items: [],
-            itemsPrice: 0,
-            totalPrice: 0,
-          },
-        });
-      }
-
-      revalidatePath('/checkout');
-      revalidatePath('/cart');
     }
 
-    // Get the updated order
-    const orderResult = await getOrderById(orderId);
-    if (!orderResult.success || !orderResult.data) {
-      return { success: false, message: 'Failed to retrieve order' };
-    }
+    // Get the completed order
+    const orderResult = await getOrderById(order.id);
 
     return {
       success: true,
-      order: orderResult.data as SerializedOrder,
+      order: orderResult.data,
     };
   } catch (error) {
     console.error('Error completing Stripe payment:', error);
-    return { success: false, message: 'Failed to process payment' };
+    return {
+      success: false,
+      message: 'Failed to complete payment',
+    };
   }
 }

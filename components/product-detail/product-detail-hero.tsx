@@ -45,6 +45,7 @@ const ProductDetailHero = ({ product }: Props) => {
     if (result.success) {
       toast.success(result.message);
       setQuantity(1); // Reset quantity selector to 1
+      window.dispatchEvent(new Event('cartUpdated'));
     } else {
       toast.error(result.message);
     }
